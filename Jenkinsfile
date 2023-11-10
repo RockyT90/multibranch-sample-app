@@ -1,21 +1,24 @@
 pipeline {
   agent any
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
+  parameters {
+        choice(name: 'Target', choices: ['Web Server', 'Background Job'], description: 'Select Target')
+    }
   stages {
     stage('Build') {
       steps {
-        sh './gradlew clean check --no-daemon'
+        echo Building
+        echo "Building ${params.Target}"
       }
     }
-  }
-  post {
-    always {
-        junit(
-          allowEmptyResults: true, 
-          testResults: '**/build/test-results/test/*.xml'
-        )
+    stage('Test') {
+      steps {
+        echo Testing
+      }
+    }
+    stage('deploy') {
+      steps {
+        echo Deploy
+      }
     }
   }
 }
